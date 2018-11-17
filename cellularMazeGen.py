@@ -8,13 +8,13 @@ class mazeGeneration:
 		self.initial = 0.4
 		self.done = False
 
-		self.deathLimit = 2
 		self.birthLimit = 4 
+		self.deathLimit = 2
 
 		self.neighbours = [ (x,y) for x in range(-1,2) for y in range(-1,2)]
 		self.neighbours.remove((0,0))	
 	
-		self.map = [[ (False if random.random()>self.initial else True) for x in range(size)] for y in range(size)]
+		self.map = [[ (0 if random.random()>self.initial else 1) for x in range(size)] for y in range(size)]
 
 	def main(self):
 		
@@ -23,10 +23,10 @@ class mazeGeneration:
 			self.iterate()
 		
 		for x in range(self.size):
-			self.map[0][x] = False
-			self.map[self.size-1][x] = False
-			self.map[x][0] = False
-			self.map[x][self.size-1] = False	
+			self.map[0][x] = 2
+			self.map[self.size-1][x] = 2
+			self.map[x][0] = 2
+			self.map[x][self.size-1] = 2	
 
 		self.displayMap()	
 
@@ -34,7 +34,7 @@ class mazeGeneration:
 	def displayMap(self):
 		for row in self.map:
 			for pos in row:
-				print ( " " if pos else "0" , end = " ")
+				print ( " " if pos==1 else pos , end = " ")
 			print ("")
 		print("")
 
@@ -50,14 +50,14 @@ class mazeGeneration:
 				for bias in self.neighbours:
 					n = self.add((x,y),bias)
 					try:
-						if self.map[n[1]][n[0]]:
-							val = val + 1
+						val = val + self.map[n[1]][n[0]]
 					except IndexError:
 						pass
+						
 				if val < self.deathLimit:
-					self.map[y][x] = False
+					self.map[y][x] = 0
 				elif val > self.birthLimit:
-					self.map[y][x] = True	
+					self.map[y][x] = 1	
 				
 				if self.map[y][x] != curr:
 					self.done = False
